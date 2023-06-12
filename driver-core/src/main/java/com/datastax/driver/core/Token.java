@@ -344,6 +344,7 @@ public abstract class Token implements Comparable<Token> {
   static class OPPToken extends Token {
 
     private final ByteBuffer value;
+    private int hashCode = 0;
 
     public static final Factory FACTORY = new OPPTokenFactory();
 
@@ -522,7 +523,14 @@ public abstract class Token implements Comparable<Token> {
 
     @Override
     public int hashCode() {
-      return value.hashCode();
+      int hash = this.hashCode;
+      if (hash == 0) {
+        // memoize hashCode via benign data race to avoid expensive computation
+        // when Token are used in hash based data structures
+        hash = value.hashCode();
+        this.hashCode = hash;
+      }
+      return hash;
     }
 
     @Override
