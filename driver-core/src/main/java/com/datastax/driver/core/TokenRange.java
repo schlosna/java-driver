@@ -319,7 +319,7 @@ public final class TokenRange implements Comparable<TokenRange> {
 
   @Override
   public int hashCode() {
-    return MoreObjects.hashCode(start, end);
+    return (31 + start.hashCode()) * 31 + end.hashCode();
   }
 
   @Override
